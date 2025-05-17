@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 const TaskForm = ({ initialData = {}, onSubmit, buttonText = 'Save' }) => {
@@ -65,7 +64,7 @@ const TaskForm = ({ initialData = {}, onSubmit, buttonText = 'Save' }) => {
           name="title"
           value={formData.title}
           onChange={handleChange}
-          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+          className={`mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
             errors.title ? 'border-red-500' : ''
           }`}
         />
@@ -82,7 +81,7 @@ const TaskForm = ({ initialData = {}, onSubmit, buttonText = 'Save' }) => {
           rows="3"
           value={formData.description}
           onChange={handleChange}
-          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+          className={`mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
             errors.description ? 'border-red-500' : ''
           }`}
         ></textarea>
@@ -99,7 +98,7 @@ const TaskForm = ({ initialData = {}, onSubmit, buttonText = 'Save' }) => {
           name="deadline"
           value={formData.deadline}
           onChange={handleChange}
-          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+          className={`mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
             errors.deadline ? 'border-red-500' : ''
           }`}
         />
@@ -116,7 +115,7 @@ const TaskForm = ({ initialData = {}, onSubmit, buttonText = 'Save' }) => {
           name="assignedTo"
           value={formData.assignedTo}
           onChange={handleChange}
-          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+          className={`mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
             errors.assignedTo ? 'border-red-500' : ''
           }`}
         />
@@ -132,7 +131,7 @@ const TaskForm = ({ initialData = {}, onSubmit, buttonText = 'Save' }) => {
           name="status"
           value={formData.status}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         >
           <option value="Pending">Pending</option>
           <option value="In Progress">In Progress</option>
