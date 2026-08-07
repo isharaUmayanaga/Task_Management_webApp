@@ -1,6 +1,7 @@
 
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Task = require('../models/Task');
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -35,6 +36,46 @@ exports.getCurrentUser = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-__v');
     res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Update profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, picture } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { name, picture },
+      { new: true, runValidators: true, select: '-__v' }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Delete profile and user tasks
+exports.deleteProfile = async (req, res) => {
+  try {
+    await Task.deleteMany({ createdBy: req.user._id });
+    await User.findByIdAndDelete(req.user._id);
+
+    res.cookie('token', '', {
+      httpOnly: true,
+      expires: new Date(0)
+    });
+
+    res.status(200).json({ message: 'User account deleted successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

@@ -12,6 +12,9 @@ router.use(protect);
 // Get all tasks
 router.get('/', taskController.getTasks);
 
+// Generate PDF report
+router.get('/report/pdf', taskController.generatePDF);
+
 // Get task by ID
 router.get('/:id', taskController.getTaskById);
 

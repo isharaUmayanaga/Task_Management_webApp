@@ -38,6 +38,16 @@ export const deleteTask = async (id) => {
   return response.data;
 };
 
+export const updateProfile = async (profileData) => {
+  const response = await api.put('/auth/me', profileData);
+  return response.data;
+};
+
+export const deleteProfile = async () => {
+  const response = await api.delete('/auth/me');
+  return response.data;
+};
+
 export const downloadPdfReport = () => {
   window.open(`${API_URL}/tasks/report/pdf`, '_blank');
 };

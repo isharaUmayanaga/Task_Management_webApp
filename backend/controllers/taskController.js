@@ -6,7 +6,10 @@ const PDFDocument = require('pdfkit');
 // Get all tasks
 exports.getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ createdBy: req.user._id }).sort({ createdAt: -1 });
+    const query = req.user.role === 'admin' ? {} : { createdBy: req.user._id };
+    const tasks = await Task.find(query)
+      .populate('createdBy', 'name email picture')
+      .sort({ createdAt: -1 });
     res.json(tasks);
   } catch (error) {
     console.error(error);
@@ -17,10 +20,11 @@ exports.getTasks = async (req, res) => {
 // Get task by ID
 exports.getTaskById = async (req, res) => {
   try {
-    const task = await Task.findOne({ 
-      _id: req.params.id,
-      createdBy: req.user._id
-    });
+    const query = req.user.role === 'admin'
+      ? { _id: req.params.id }
+      : { _id: req.params.id, createdBy: req.user._id };
+
+    const task = await Task.findOne(query).populate('createdBy', 'name email picture');
     
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
@@ -69,10 +73,11 @@ exports.updateTask = async (req, res) => {
   try {
     const { title, description, deadline, assignedTo, status } = req.body;
     
-    let task = await Task.findOne({
-      _id: req.params.id,
-      createdBy: req.user._id
-    });
+    const query = req.user.role === 'admin'
+      ? { _id: req.params.id }
+      : { _id: req.params.id, createdBy: req.user._id };
+
+    let task = await Task.findOne(query);
     
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
@@ -82,7 +87,7 @@ exports.updateTask = async (req, res) => {
       req.params.id,
       { title, description, deadline, assignedTo, status },
       { new: true }
-    );
+    ).populate('createdBy', 'name email picture');
     
     res.json(task);
   } catch (error) {
@@ -94,10 +99,11 @@ exports.updateTask = async (req, res) => {
 // Delete task
 exports.deleteTask = async (req, res) => {
   try {
-    const task = await Task.findOne({
-      _id: req.params.id,
-      createdBy: req.user._id
-    });
+    const query = req.user.role === 'admin'
+      ? { _id: req.params.id }
+      : { _id: req.params.id, createdBy: req.user._id };
+
+    const task = await Task.findOne(query);
     
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });

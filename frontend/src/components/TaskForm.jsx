@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const TaskForm = ({ initialData = {}, onSubmit, buttonText = 'Save' }) => {
   const [formData, setFormData] = useState({
@@ -8,6 +8,18 @@ const TaskForm = ({ initialData = {}, onSubmit, buttonText = 'Save' }) => {
     assignedTo: initialData.assignedTo || '',
     status: initialData.status || 'Pending'
   });
+
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0) {
+      setFormData({
+        title: initialData.title || '',
+        description: initialData.description || '',
+        deadline: initialData.deadline ? new Date(initialData.deadline).toISOString().split('T')[0] : '',
+        assignedTo: initialData.assignedTo || '',
+        status: initialData.status || 'Pending'
+      });
+    }
+  }, [initialData]);
 
   const [errors, setErrors] = useState({});
 
