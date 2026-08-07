@@ -13,6 +13,12 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
 // Get current user
 router.get('/me', protect, authController.getCurrentUser);
 
+// Update current user profile
+router.put('/me', protect, authController.updateProfile);
+
+// Delete current user profile
+router.delete('/me', protect, authController.deleteProfile);
+
 // Logout
 router.post('/logout', authController.logout);
 
