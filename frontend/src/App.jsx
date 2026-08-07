@@ -3,14 +3,14 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 
 // Pages
-import LoginPage from './pages/LoginPage.js';
-import DashboardPage from './pages/DashboardPage.js';
-import TaskListPage from './pages/TaskListPage.js';
-import AddTaskPage from './pages/AddTaskPage.js';
-import EditTaskPage from './pages/EditTaskPage.js';
-import ViewTaskPage from './pages/ViewTaskPage.js';
-import NotFoundPage from './pages/NotFoundPage.js';
-import ProfilePage from './pages/ProfilePage.js';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import TaskListPage from './pages/TaskListPage';
+import AddTaskPage from './pages/AddTaskPage';
+import EditTaskPage from './pages/EditTaskPage';
+import ViewTaskPage from './pages/ViewTaskPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ProfilePage from './pages/ProfilePage';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {

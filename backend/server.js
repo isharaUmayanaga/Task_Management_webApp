@@ -5,6 +5,9 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
+const dns = require('dns');
+
+dns.setServers(['1.1.1.1', '8.8.8.8']);
 
 // Load environment variables
 dotenv.config();
@@ -28,9 +31,21 @@ app.use(cors({
 app.use(passport.initialize());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+const connectToMongo = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      ssl: true,
+      tls: true,
+      tlsAllowInvalidCertificates: false
+    });
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  }
+};
+
+connectToMongo();
 
 // Routes
 app.use('/api/auth', authRoutes);
