@@ -25,7 +25,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-const allowedOrigins = [
+const rawAllowedOrigins = [
   process.env.CLIENT_URL,
   'http://localhost:3000',
   'http://localhost:5173',
@@ -33,9 +33,19 @@ const allowedOrigins = [
   'http://127.0.0.1:5173'
 ].filter(Boolean);
 
+const allowedOrigins = rawAllowedOrigins.map((origin) => {
+  try {
+    return new URL(origin).origin;
+  } catch {
+    return origin.replace(/\/+$/, '');
+  }
+});
+
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = origin ? origin.replace(/\/+$/, '') : origin;
+
+    if (!origin || allowedOrigins.includes(normalizedOrigin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

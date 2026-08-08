@@ -16,10 +16,13 @@ exports.googleCallback = (req, res) => {
     // User is already authenticated by passport
     const token = generateToken(req.user._id);
 
-    // Set cookie
+    const isProd = process.env.NODE_ENV === 'production';
+
+    // Set cookie for cross-site frontend/back-end deployment
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     });
 
@@ -75,6 +78,8 @@ exports.deleteProfile = async (req, res) => {
 
     res.cookie('token', '', {
       httpOnly: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production',
       expires: new Date(0)
     });
 
@@ -89,6 +94,8 @@ exports.deleteProfile = async (req, res) => {
 exports.logout = (req, res) => {
   res.cookie('token', '', {
     httpOnly: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === 'production',
     expires: new Date(0)
   });
   res.status(200).json({ message: 'Logged out successfully' });
