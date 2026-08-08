@@ -18,13 +18,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-     "test": "vitest",
+    "start": "node init && react-scripts start",
+    "test": "vitest",
     "eject": "react-scripts eject",
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node init && vite",
+    "build": "node init && vite build",
     "preview": "vite preview"
-    
   },
   "eslintConfig": {
     "extends": [
