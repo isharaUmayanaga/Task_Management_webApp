@@ -15,7 +15,7 @@ exports.googleCallback = (req, res) => {
   try {
     // User is already authenticated by passport
     const token = generateToken(req.user._id);
-    
+
     // Set cookie
     res.cookie('token', token, {
       httpOnly: true,
@@ -23,11 +23,14 @@ exports.googleCallback = (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     });
 
-    // Redirect to frontend
-    res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+    const clientUrl = (process.env.CLIENT_URL || 'https://task-management-webapp.ish04838.workers.dev').replace(/\/+$/, '');
+
+    // Redirect to hash-based frontend SPA route, because the frontend is deployed as a static assets worker
+    res.redirect(`${clientUrl}/#/dashboard`);
   } catch (error) {
     console.error(error);
-    res.redirect(`${process.env.CLIENT_URL}/login?error=auth_failed`);
+    const clientUrl = (process.env.CLIENT_URL || 'https://task-management-webapp.ish04838.workers.dev').replace(/\/+$/, '');
+    res.redirect(`${clientUrl}/#/login`);
   }
 };
 

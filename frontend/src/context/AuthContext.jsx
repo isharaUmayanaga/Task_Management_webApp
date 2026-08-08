@@ -37,12 +37,13 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = async () => {
     try {
-     
       await axios.post(`${API_URL}/api/auth/logout`, {}, {
         withCredentials: true
       });
       setUser(null);
-      window.location.href = '/login';
+
+      const currentOrigin = window.location.origin;
+      window.location.assign(`${currentOrigin}/#/login`);
     } catch (error) {
       console.error('Logout error', error);
     }
