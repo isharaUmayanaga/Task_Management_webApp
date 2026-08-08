@@ -18,7 +18,9 @@ const LoginPage = () => {
   }
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/api/auth/google';
+   
+    const API_URL = import.meta.env.VITE_API_URL || 'https://task-management-webapp-jicr.onrender.com';
+    window.location.href = `${API_URL}/api/auth/google`;
   };
 
   return (
