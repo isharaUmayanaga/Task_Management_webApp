@@ -113,51 +113,71 @@ The app will be available at:
 
 ## Production Deployment
 
-### Backend on Koyeb
+### Backend on Render
+
+The backend API is currently deployed at:
+
+```text
+https://task-management-webapp-jicr.onrender.com
+```
 
 #### Required environment variables
 
 ```env
 NODE_ENV=production
-PORT=8080
+PORT=10000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
-CLIENT_URL=https://your-frontend-domain.pages.dev
-BACKEND_URL=https://your-backend-app.koyeb.app
+CLIENT_URL=https://task-management-webapp.ish04838.workers.dev/
+BACKEND_URL=https://task-management-webapp-jicr.onrender.com
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_CALLBACK_URL=https://your-backend-app.koyeb.app/api/auth/google/callback
+GOOGLE_CALLBACK_URL=https://task-management-webapp-jicr.onrender.com/api/auth/google/callback
 ```
 
-#### Koyeb deployment steps
+The backend route used by Passport is:
 
-1. Create a new Koyeb service
+```text
+GET /api/auth/google
+GET /api/auth/google/callback
+GET /api/auth/me
+```
+
+#### Render deployment steps
+
+1. Create a new Render web service
 2. Connect your GitHub repository
 3. Select the backend folder as the app root
 4. Set build command:
    ```bash
    npm install
    ```
-5. Set run command:
+5. Set start command:
    ```bash
    npm start
    ```
 6. Add the environment variables above
 7. Deploy
 
-### Frontend on Cloudflare Pages
+### Frontend on Cloudflare Worker / Pages
+
+The frontend is currently published to the Cloudflare worker domain:
+
+```text
+https://task-management-webapp.ish04838.workers.dev/
+```
 
 #### Required environment variable
 
 ```env
-VITE_API_URL=https://your-backend-app.koyeb.app/api
+VITE_API_URL=https://task-management-webapp-jicr.onrender.com/api
 ```
 
-#### Cloudflare Pages deployment steps
+#### Cloudflare deployment steps
 
-1. Create a new Cloudflare Pages project
-2. Connect your GitHub repository
-3. Select the frontend folder
+1. Create a Cloudflare Worker or Pages project
+2. Connect the GitHub repository
+3. Select the frontend folder as the build source
 4. Set build command:
    ```bash
    npm install && npm run build
@@ -167,7 +187,9 @@ VITE_API_URL=https://your-backend-app.koyeb.app/api
    dist
    ```
 6. Add the `VITE_API_URL` environment variable
-7. Deploy
+7. Deploy with the generated `dist` files as assets
+
+Because the frontend uses client-side routes, the deployment must also serve the app shell for non-root browser paths such as `/dashboard` instead of letting Cloudflare return a static 404 page.
 
 ---
 
@@ -175,14 +197,31 @@ VITE_API_URL=https://your-backend-app.koyeb.app/api
 
 1. Go to Google Cloud Console
 2. Create an OAuth client ID
-3. Add the redirect URI:
+3. Set the OAuth application type to Web application
+4. Add the authorized JavaScript origins:
+   ```text
+   http://localhost:5173
+   http://localhost:5000
+   https://task-management-webapp.ish04838.workers.dev/
+   https://task-management-webapp-jicr.onrender.com
+   ```
+5. Add the authorized redirect URI:
    ```text
    http://localhost:5000/api/auth/google/callback
    ```
    For production:
    ```text
-   https://your-backend-app.koyeb.app/api/auth/google/callback
+   https://task-management-webapp-jicr.onrender.com/api/auth/google/callback
    ```
+
+The deployed backend sets a JWT cookie after successful Google login. Because the frontend and API live on different origins (`workers.dev` and `render.com`), the cookie must be configured for cross-site delivery:
+
+```js
+sameSite: 'none'
+secure: true
+```
+
+When `NODE_ENV=production`, the backend controller writes that cookie shape to support the Cloudflare-to-Render deployment model.
 
 ---
 
